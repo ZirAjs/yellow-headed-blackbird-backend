@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "articles",
     "nature",
     "diary",
+    "tasks",
 ]
 
 REST_FRAMEWORK = {
