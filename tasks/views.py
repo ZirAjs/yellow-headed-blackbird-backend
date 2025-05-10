@@ -11,9 +11,14 @@ from .serializers import TaskSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from django.conf import settings
+from rest_framework.viewsets import ModelViewSet
 
 GEMINI_API_URL = settings.GEMINI_API_URL
 GEMINI_API_KEY = settings.GEMINI_API_KEY
+
+class TasksViewSet(ModelViewSet):
+    serializer_class = TaskSerializer
+
 
 @permission_classes([AllowAny])
 class GenerateTasksView(APIView):
