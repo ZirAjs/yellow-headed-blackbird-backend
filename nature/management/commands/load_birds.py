@@ -6,6 +6,10 @@ class Command(BaseCommand):
     help = 'Load hardcoded bird data'
 
     def handle(self, *args, **kwargs):
+        # 기존 데이터 삭제
+        Bird.objects.all().delete()
+
+        # 넣게 될 새(Bird) 데이터
         birds = [
             {"name": "Sparrow", "time": time(0), "description": "Quietly roosting for the night."},
             {"name": "Nightingale", "time": time(0), "description": "Silently perched in the darkness."},
@@ -140,6 +144,8 @@ class Command(BaseCommand):
             {"name": "Carolina Wren", "time": time(23), "description": "Snuggled into a sheltered spot for the night."},
             {"name": "Pileated Woodpecker", "time": time(23), "description": "Resting quietly in its roosting hole."},
                 ]
+        
+        # 새(Bird) 데이터 삽입
         for book in birds:
             Bird.objects.create(**book)
-        self.stdout.write(self.style.SUCCESS('Hardcoded birds loaded.'))
+        self.stdout.write(self.style.SUCCESS('New birds data loaded.'))
