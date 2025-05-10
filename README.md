@@ -7,8 +7,6 @@
 
 👉 서비스 및 기능에 대한 자세한 내용은 [프론트엔드 리포지토리 README](https://github.com/alexander050211/yellow-headed-blackbird-frontend)를 참고하세요.
 
----
-
 ## 기술 스택
 
 ### 백엔드 개발
@@ -24,14 +22,12 @@
 * **Gunicorn**
 * **Google Cloud Computing**
 
----
 
 ## 📄 API 문서
 
 * [Swagger 문서 보기](https://hackerton.zirajs.com/swagger/)
 * [ReDoc 문서 보기](https://hackerton.zirajs.com/redoc/)
 
----
 
 ## Python 의존성
 
@@ -44,7 +40,6 @@ gunicorn
 requests
 ```
 
----
 
 ## Build 명령어
 
