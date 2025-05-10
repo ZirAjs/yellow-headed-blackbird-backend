@@ -13,6 +13,6 @@ class CaffeineSerializer(serializers.ModelSerializer):
             "id",
             "diary_id",
             "amount",
-            "date_time",
+            "timestamp",
             "description",
         ]
