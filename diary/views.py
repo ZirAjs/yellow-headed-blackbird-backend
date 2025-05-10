@@ -7,7 +7,7 @@ from django.utils import timezone
 from datetime import datetime, time, timedelta
 
 from .models import Diary
-from .serializers import DiarySerializer
+from .serializers import DiarySerializer, DiaryDetailSerializer
 
 # Internal cache
 _cached_6pm = None
@@ -70,7 +70,7 @@ class DiaryViewSet(ModelViewSet):
         Retrieve a diary entry by its ID.
         """
         instance = self.get_object()
-        serializer = self.get_serializer(instance)
+        serializer = DiaryDetailSerializer(instance)
 
         return Response(serializer.data)
 

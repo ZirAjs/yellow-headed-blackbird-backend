@@ -11,7 +11,7 @@ from rest_framework.mixins import (
     DestroyModelMixin,
 )
 
-from .serializer import CaffeineSerializer
+from .serializers import CaffeineSerializer
 from .models import Caffeine
 
 
