@@ -23,4 +23,5 @@ class CaffeineViewSet(viewsets.ModelViewSet):
         for the currently authenticated user.
         """
         user = self.request.user
-        return Caffeine.objects.filter(user_id=user.id)
+
+        return Caffeine.objects.filter(diary_id__user_id=user.id)
