@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 
 from django.utils import timezone
@@ -41,7 +42,7 @@ class DiaryViewSet(ModelViewSet):
     A viewset for viewing and editing diary instances.
     """
 
-    serializer_class = DiarySerializer
+    serializer_class = DiaryDetailSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -50,29 +51,31 @@ class DiaryViewSet(ModelViewSet):
         for the currently authenticated user.
         """
         user = self.request.user
-        return Diary.objects.filter(user_id=user.id)
+        return Diary.objects.filter(user_id=user.id).order_by("-created_time")
 
+    def list(self, request, *args, **kwargs):
+        """
+        List all diary entries for the authenticated user.
+        """
+        queryset = self.get_queryset()
+        paginator = PageNumberPagination()
+        page = paginator.paginate_queryset(queryset, request)
+
+        serializer = DiarySerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    
     def create(self, request, *args, **kwargs):
         """
         Create a new diary entry.
         """
         user_id = request.user
-        serializer = self.get_serializer(data=request.data)
+        serializer = DiarySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         diary = serializer.save(user_id=user_id)
         diary.save()
 
         return Response(serializer.data, status=201)
-
-    def retrieve(self, request, *args, **kwargs):
-        """
-        Retrieve a diary entry by its ID.
-        """
-        instance = self.get_object()
-        serializer = DiaryDetailSerializer(instance)
-
-        return Response(serializer.data)
 
     @action(detail=False, methods=["get"])
     def winners(self, request):
