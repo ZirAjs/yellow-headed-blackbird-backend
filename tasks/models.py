@@ -9,5 +9,5 @@ class Task(models.Model):
     order = models.IntegerField()
     due_time = models.DateTimeField()
     start_time = models.DateTimeField()
-    finished_time = models.DateTimeField()
+    finished_time = models.DateTimeField(null=True, blank=True)
     type = models.CharField(max_length=200)

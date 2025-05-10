@@ -11,7 +11,13 @@ from .serializers import TaskSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import permission_classes
 from django.conf import settings
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.mixins import (
+    CreateModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+)
 
 # openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -22,7 +28,13 @@ GEMINI_API_KEY = settings.GEMINI_API_KEY
 
 
 @permission_classes([IsAuthenticated])
-class TasksViewSet(ModelViewSet):
+class TasksViewSet(
+    GenericViewSet,
+    CreateModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
