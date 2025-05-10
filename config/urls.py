@@ -28,11 +28,13 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("accounts.urls")),  # accounts 앱의 auth_urls.py를 포함
+    path("api/", include("nature.urls")),
     path(
         "api/", include("articles.urls"), name="articles"
     ),  # articles 앱의 urls.py를 포함
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+
     # Swagger URL
     path(
         "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
