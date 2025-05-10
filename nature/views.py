@@ -61,7 +61,7 @@ class NatureEventsView(APIView):
 
         current_dt = start_dt
         while current_dt < end_dt:
-            hours_gap = 1
+            hours_gap = 2
             next_dt = current_dt + timedelta(hours=hours_gap)
 
             # 해당 구간 내 새 필터링
