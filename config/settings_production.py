@@ -22,10 +22,7 @@ if SECRET_KEY == "django-insecure-!@#@!@#@!@#":
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    # Add your production domain or IP address here
-    "localhost",
-]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOST", "localhost").split(",")
 
 # Application definition
 
@@ -38,6 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt",
+    "diary",
     "drf_yasg",
     "accounts",
     "articles",
