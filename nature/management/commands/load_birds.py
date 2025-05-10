@@ -143,7 +143,7 @@ class Command(BaseCommand):
             {"name": "Killdeer", "time": time(23), "description": "Giving its piercing 'kill-deer' call in the darkness."},
             {"name": "Carolina Wren", "time": time(23), "description": "Snuggled into a sheltered spot for the night."},
             {"name": "Pileated Woodpecker", "time": time(23), "description": "Resting quietly in its roosting hole."},
-                ]
+        ]
         
         # 새(Bird) 데이터 삽입
         for book in birds:
