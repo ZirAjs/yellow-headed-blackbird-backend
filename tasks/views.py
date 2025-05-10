@@ -1,31 +1,63 @@
 from django.shortcuts import render
+from .models import Task
 
 import requests
 import json
 import re
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from .models import Task
 from .serializers import TaskSerializer
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import permission_classes
 from django.conf import settings
 from rest_framework.viewsets import ModelViewSet
 
+# openapi
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
 GEMINI_API_URL = settings.GEMINI_API_URL
 GEMINI_API_KEY = settings.GEMINI_API_KEY
 
+
+@permission_classes([IsAuthenticated])
 class TasksViewSet(ModelViewSet):
     serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Task.objects.filter(diary_id__user_id=user.id)
 
 
 @permission_classes([AllowAny])
 class GenerateTasksView(APIView):
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "title",
+                openapi.IN_QUERY,
+                description="Task title",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "description",
+                openapi.IN_QUERY,
+                description="Task description",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "final_time",
+                openapi.IN_QUERY,
+                description="Final time",
+                type=openapi.TYPE_STRING,
+            ),
+        ]
+    )
     def get(self, request):
-        title = request.data.get("title")
-        description = request.data.get("description")
-        final_time = request.data.get("final_time")
+        title = request.query_params.get("title")
+        description = request.query_params.get("description")
+        final_time = request.query_params.get("final_time")
 
         if not title:
             return Response({"error": "title은 필수입니다."}, status=400)
@@ -50,28 +82,29 @@ JSON 배열 형식으로 출력하세요.
         """
 
         headers = {"Content-Type": "application/json"}
-        data = {
-            "contents": [
-                {
-                    "parts": [{"text": prompt}]
-                }
-            ]
-        }
+        data = {"contents": [{"parts": [{"text": prompt}]}]}
 
         response = requests.post(
-            f"{GEMINI_API_URL}?key={GEMINI_API_KEY}",
-            headers=headers,
-            json=data
+            f"{GEMINI_API_URL}?key={GEMINI_API_KEY}", headers=headers, json=data
         )
 
         if response.status_code != 200:
-            return Response({"error": "Gemini API 호출 실패", "detail": response.text}, status=500)
+            return Response(
+                {"error": "Gemini API 호출 실패", "detail": response.text}, status=500
+            )
 
         try:
-            generated_text = response.json()['candidates'][0]['content']['parts'][0]['text']
-            json_string = re.search(r"```json\s*(.*?)\s*```", generated_text, re.DOTALL).group(1)
+            generated_text = response.json()["candidates"][0]["content"]["parts"][0][
+                "text"
+            ]
+            json_string = re.search(
+                r"```json\s*(.*?)\s*```", generated_text, re.DOTALL
+            ).group(1)
             task_list = json.loads(json_string)
         except Exception as e:
-            return Response({"error": f"Gemini 응답 파싱 실패 {response.text}", "detail": str(e)}, status=500)
+            return Response(
+                {"error": f"Gemini 응답 파싱 실패 {response.text}", "detail": str(e)},
+                status=500,
+            )
 
         return Response(task_list, status=200)
