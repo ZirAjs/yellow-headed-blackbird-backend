@@ -29,6 +29,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
 
+CSRF_TRUSTED_ORIGINS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
+
 # Application definition
 
 INSTALLED_APPS = [
