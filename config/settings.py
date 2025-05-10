@@ -17,6 +17,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", default="django-insecure-!@#@!@#@!@#")
 
+EBIRD_API_KEY = os.getenv("EBIRD_API_KEY")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

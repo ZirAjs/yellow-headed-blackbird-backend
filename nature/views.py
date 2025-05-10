@@ -14,13 +14,14 @@ class NatureEventsView(APIView):
         base_day_param = request.GET.get("base_day")
         try:
             base_date = datetime.strptime(base_day_param, "%Y-%m-%d").date()
+            next_date = base_date + timedelta(days=1)
         except ValueError:
             return Response({"error": "Invalid base_day format. Use YYYY-MM-DD."}, status=400)
         
         lat = float(request.GET.get("lat", 37.5665))
         lng = float(request.GET.get("lng", 126.9780))
 
-        sun_data = fetch_sun_info(lat=lat, lng=lng, base_date=str(base_date), next_date = str(base_date + timedelta(days=1)))
+        sun_data = fetch_sun_info(lat=lat, lng=lng, base_date=str(base_date), next_date = str(next_date))
 
         events = [
             {
