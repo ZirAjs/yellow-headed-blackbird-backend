@@ -10,6 +10,6 @@ router.register(r"user", UserViewSet, basename="user")
 urlpatterns = [
     path("auth/register/", RegisterView.as_view(), name="register"),
     path("auth/login/", LoginView.as_view(), name="login"),
-    path("cutoff/", CutoffViewSet.as_view({"get": "list"}), name="cutoff-list"),
+    path("cutoff/", CutoffViewSet.as_view(), name="cutoff-list"),
     path("", include(router.urls)),
 ]
