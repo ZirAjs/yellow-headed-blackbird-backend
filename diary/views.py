@@ -76,5 +76,5 @@ class DiaryViewSet(ModelViewSet):
                 ended_at__gt=today_6pm,
                 created_at__gt=today_6pm,
             ).count()
-            percent = float(finished_diaries) / total_diaries
+            percent = 1 - (float(finished_diaries) / total_diaries)
             return Response({"percent": percent})
