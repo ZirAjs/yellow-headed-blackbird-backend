@@ -29,6 +29,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
 
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost").split(",")
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -130,13 +132,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ko-kr"  # 한국어
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Seoul"  # 한국 표준시 (KST)
 
-USE_I18N = True
+USE_I18N = True  # 국제화 지원 (다국어)
 
-USE_TZ = True
+USE_TZ = True  # 시간대를 aware datetime으로 처리
 
 
 # Static files (CSS, JavaScript, Images)

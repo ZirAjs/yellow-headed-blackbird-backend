@@ -1,6 +1,9 @@
 from rest_framework import viewsets, mixins
 from accounts.models import User
-from accounts.serializers import CreateUserSerializer, UpdateUserSerializer
+from accounts.serializers import (
+    CreateUserSerializer,
+    UpdateUserSerializer,
+)
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
@@ -28,9 +31,9 @@ class UserViewSet(
         """
         match request.method:
             case "GET":
-                seralizer = CreateUserSerializer(data=request.user)
+                serializer = CreateUserSerializer(request.user)
 
-                return Response(seralizer.data)
+                return Response(serializer.data)
 
             case "PUT":
                 user = request.user
