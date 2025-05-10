@@ -51,7 +51,7 @@ class DiaryViewSet(ModelViewSet):
         for the currently authenticated user.
         """
         user = self.request.user
-        return Diary.objects.filter(user_id=user.id)
+        return Diary.objects.filter(user_id=user.id).order_by("-created_time")
 
     def list(self, request, *args, **kwargs):
         """
@@ -60,9 +60,10 @@ class DiaryViewSet(ModelViewSet):
         queryset = self.get_queryset()
         paginator = PageNumberPagination()
         page = paginator.paginate_queryset(queryset, request)
+
         serializer = DiarySerializer(page, many=True)
         return paginator.get_paginated_response(serializer.data)
-
+    
     def create(self, request, *args, **kwargs):
         """
         Create a new diary entry.
