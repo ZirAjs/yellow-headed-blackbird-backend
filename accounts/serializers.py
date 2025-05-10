@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from accounts.models import User, Setting
+from accounts.models import User, Setting, Cutoff
 
 
 class SettingSerializer(serializers.ModelSerializer):
@@ -8,6 +8,10 @@ class SettingSerializer(serializers.ModelSerializer):
         model = Setting
         fields = ["alarm"]
 
+class CutoffSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cutoff
+        fields = '__all__'
 
 class BaseUserSerializer(serializers.ModelSerializer):
     username = serializers.EmailField(required=True)
