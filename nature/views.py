@@ -7,6 +7,8 @@ from django.db.models import Q
 from django.utils.dateparse import parse_datetime
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from .services.sun_api import fetch_sun_info
 from .models import Bird
 import random
@@ -14,6 +16,15 @@ import random
 # Create your views here.
 @permission_classes([AllowAny])
 class NatureEventsView(APIView):
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('start_date_time', openapi.IN_QUERY, description="시작 날짜시간 (예: 2025-05-10T22:00:00)", type=openapi.TYPE_STRING),
+            openapi.Parameter('end_date_time', openapi.IN_QUERY, description="끝 날짜시간 (예: 2025-05-11T04:00:00)", type=openapi.TYPE_STRING),
+        ],
+        responses={200: 'nature event 리스트 반환', 400: '잘못된 요청'},
+        operation_description="해당 시간 구간 내의 일출, 일몰, 새 활동목록을 반환",
+    )
+
     def get(self, request):
         start_dt = parse_datetime(request.GET.get("start_date_time"))
         end_dt = parse_datetime(request.GET.get("end_date_time"))
