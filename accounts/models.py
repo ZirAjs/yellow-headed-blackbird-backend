@@ -31,7 +31,7 @@ class Setting(models.Model):
         return f"{self.user.username}'s settings"
 
 
-class Cutoff(models.Model):
+class Tier(models.Model):
     name = models.CharField(max_length=200)
     cut = models.IntegerField()
 
