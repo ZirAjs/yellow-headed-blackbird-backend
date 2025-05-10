@@ -5,7 +5,7 @@ from django.conf import settings
 
 EBIRD_API_KEY = settings.EBIRD_API_KEY
 def get_recent_birds_by_location(lat, lng, hours_back=3):
-    url = f"https://api.ebird.org/v2/data/obs/geo/recent"
+    url = f"https://api.ebird.org/v2/data/obs/{{regionCode}}/recent/notable"
     headers = {"X-eBirdApiToken": EBIRD_API_KEY}
     params = {
         "lat": lat,
