@@ -52,6 +52,19 @@ class DiaryViewSet(ModelViewSet):
         user = self.request.user
         return Diary.objects.filter(user_id=user.id)
 
+    def create(self, request, *args, **kwargs):
+        """
+        Create a new diary entry.
+        """
+        user_id = request.user
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        diary = serializer.save(user_id=user_id)
+        diary.save()
+
+        return Response(serializer.data, status=201)
+
     def retrieve(self, request, *args, **kwargs):
         """
         Retrieve a diary entry by its ID.
@@ -76,5 +89,5 @@ class DiaryViewSet(ModelViewSet):
                 ended_at__gt=today_6pm,
                 created_at__gt=today_6pm,
             ).count()
-            percent = float(finished_diaries) / total_diaries
+            percent = 1 - (float(finished_diaries) / total_diaries)
             return Response({"percent": percent})
