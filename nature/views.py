@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime, timedelta
+from django.db.models import Q
 from django.utils.dateparse import parse_datetime
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
@@ -52,29 +53,31 @@ class NatureEventsView(APIView):
             hours_gap = 1
             next_dt = current_dt + timedelta(hours=hours_gap)
 
-            # 해당 시간 구간에 포함된 Bird 객체 필터링
-            birds_in_range = Bird.objects.filter(time__gte=current_dt, time__lt=next_dt)
+            # 해당 구간 내 새 필터링
+            current_time = current_dt.time()
+            next_time = next_dt.time()
+
+            if current_time < next_time:
+                # 같은 날 안에서의 시간 구간
+                birds_in_range = Bird.objects.filter(time__gte=current_time, time__lt=next_time)
+            else:
+                # 자정을 넘어가는 경우
+                birds_in_range = Bird.objects.filter(
+                    Q(time__gte=current_time) | Q(time__lt=next_time)
+                )
             
             if birds_in_range.exists(): 
                 # db에 있다면 db에 있는 새를 반환
                 bird = random.choice(list(birds_in_range))
+                # 시간은 구간 내에서 랜덤으로
+                logged_time = (current_dt + timedelta(hours=hours_gap*random.random())).time()
                 events.append({
                     "type": "bird",
                     "name": bird.name,
-                    "time": bird.time.isoformat(),
+                    "time": logged_time,
                     "description": bird.description,
                 })
-            else: 
-                # db에 없다면 하루마다 반복되는 새 리스트 사용
-                logged_datetime = (current_dt + timedelta(hours=hours_gap*random.random()))
-                bird_info = get_daily_bird(logged_datetime.time())
-                events.append({
-                    "type": "bird",
-                    "name": bird_info["name"],
-                    "time": logged_datetime.isoformat(),
-                    "description": bird_info["description"],
-                })
-            
+
             current_dt = next_dt
 
         events.sort(key=lambda x: datetime.fromisoformat(x["time"]))
