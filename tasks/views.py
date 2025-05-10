@@ -43,7 +43,7 @@ class TasksViewSet(
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(
-            data=request.data, context={"request": request.user}
+            data=request.data, context={"request": request}
         )
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
