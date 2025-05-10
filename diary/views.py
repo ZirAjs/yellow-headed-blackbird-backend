@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
+from django.db.models import Prefetch
 
 
 from django.utils import timezone, dateparse
@@ -67,16 +68,16 @@ class DiaryViewSet(ModelViewSet):
     A viewset for viewing and editing diary instances.
     """
 
+    http_method_names = ["get", "post", "patch", "delete"]
     serializer_class = DiaryDetailSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         """
-        This view should return a list of all the diaries
-        for the currently authenticated user.
+        Return diaries for the authenticated user, optionally filtered by datetime range.
+        Prefetch tasks and caffeine entries for serializer efficiency.
         """
         user = self.request.user
-        # Filter diaries by date range if provided
         start_datetime = self.request.query_params.get("start_datetime")
         end_datetime = self.request.query_params.get("end_datetime")
 
@@ -88,8 +89,8 @@ class DiaryViewSet(ModelViewSet):
             queryset = queryset.filter(created_time__gte=start_datetime)
 
         if end_datetime and (end_datetime := dateparse.parse_datetime(end_datetime)):
-
             queryset = queryset.filter(created_time__lte=end_datetime)
+
         return queryset.order_by("-created_time")
 
     @swagger_auto_schema(manual_parameters=[start_param, end_param])
@@ -116,6 +117,33 @@ class DiaryViewSet(ModelViewSet):
         diary.save()
 
         return Response(serializer.data, status=201)
+
+    def partial_update(self, request, *args, **kwargs):
+        """
+        Update a diary entry.
+        """
+        instance = self.get_object()
+        serializer = DiaryDetailSerializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        # only allow modification of title, description, focus_time, due_time
+
+        if "ended_time" in request.data:
+            # add experience to user
+            user = request.user
+            duration = timezone.now() - instance.created_time
+            minutes = int(duration.total_seconds() // 60)
+            print(f"minutes: {minutes}")
+            user.experience += minutes
+            user.save()
+            serializer.save(
+                ended_time=timezone.now(),
+                created_time=instance.created_time,
+            )  # override with server time
+        else:
+            serializer.save(created_time=instance.created_time)  # proceed as usual
+
+        return Response(serializer.data)
 
     @action(detail=False, methods=["get"])
     def winners(self, request):

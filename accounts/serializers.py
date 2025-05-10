@@ -122,4 +122,4 @@ class ViewUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "nickname", "setting"]
+        fields = ["username", "nickname", "setting", "experience"]
