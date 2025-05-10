@@ -1,9 +1,9 @@
 import requests
 import random
 from datetime import datetime
+from django.conf import settings
 
-EBIRD_API_KEY = 'your_ebird_api_key'  # 환경변수로 처리해도 좋아요
-
+EBIRD_API_KEY = settings.EBIRD_API_KEY
 def get_recent_birds_by_location(lat, lng, hours_back=3):
     url = f"https://api.ebird.org/v2/data/obs/geo/recent"
     headers = {"X-eBirdApiToken": EBIRD_API_KEY}
