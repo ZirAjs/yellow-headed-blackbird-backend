@@ -14,8 +14,6 @@ import random
 @permission_classes([AllowAny])
 class NatureEventsView(APIView):
     def get(self, request):
-        start_datetime_param = request.GET.get("start_date_time")
-        end_datetime_param = request.GET.get("end_date_time")
         start_dt = parse_datetime(request.GET.get("start_date_time"))
         end_dt = parse_datetime(request.GET.get("end_date_time"))
         
