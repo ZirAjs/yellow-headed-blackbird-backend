@@ -4,7 +4,7 @@
 
 ## 프로젝트 소개
 
-이 저장소는 밤샘 기록 웹 서비스 **나이테(Night-Task)**의 백엔드입니다.
+이 저장소는 밤샘 기록 웹 서비스 **나이테(Night-Task)** 의 백엔드입니다.
 당신의 모든 야근과 집중의 순간을 함께합니다.
 
 👉 서비스 및 기능에 대한 자세한 내용은 [프론트엔드 리포지토리 README](https://github.com/alexander050211/yellow-headed-blackbird-frontend)를 참고하세요.
