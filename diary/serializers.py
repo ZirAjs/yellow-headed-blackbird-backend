@@ -9,7 +9,7 @@ class DiarySerializer(serializers.ModelSerializer):
     # For writing: accept list of task IDs
     tasks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     user_id = serializers.IntegerField(source="user_id.id", read_only=True)
-    due_at = serializers.DateTimeField(allow_null=False, required=True)
+    due_time = serializers.DateTimeField(allow_null=False, required=True)
 
     # For reading: show actual task data
     task_details = serializers.SerializerMethodField(read_only=True)
@@ -22,9 +22,9 @@ class DiarySerializer(serializers.ModelSerializer):
             "title",
             "description",
             "focus_time",
-            "due_at",
-            "created_at",
-            "ended_at",
+            "due_time",
+            "created_time",
+            "ended_time",
             "tasks",  # read-only task IDs
             "task_details",  # read-only serialized task objects
         ]
