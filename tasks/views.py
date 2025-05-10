@@ -78,6 +78,9 @@ class GenerateTasksView(APIView):
         prompt = f"""
 당신은 작업(Task) 생성 도우미입니다.
 
+사용자는 높은 확률로 대학생 또는 직장인이며, 밤을 새서 작업을 하게 될 예정입니다
+사용자가 밤을 새서 어떤 순서로 작업을 하면 좋을지 가이드라을 제시해주는 역할을 수행합니다
+
 다음은 사용자가 입력한 제목과 설명입니다:
 
 제목: {title}
@@ -87,8 +90,7 @@ class GenerateTasksView(APIView):
 이 정보를 바탕으로 다음 필드를 포함한 Task를 여러 개 생성하세요 (최소 3개).
 - title
 - order (int, 순서대로)
-- due_time (UTC ISO 8601 형식, 목표 종료 시간)
-- type (string, 무조건 "middle")
+- due_time (naive datetime 문자열 형식, 목표 종료 시간)
 JSON 배열 형식으로 출력하세요.
         """
 
