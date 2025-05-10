@@ -25,6 +25,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
     # Add your production domain or IP address here
     "localhost",
+    os.getenv("ALLOWED_HOST", default="localhost"),
 ]
 
 # Application definition
