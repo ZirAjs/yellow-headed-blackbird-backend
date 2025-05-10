@@ -70,11 +70,11 @@ class NatureEventsView(APIView):
                 # db에 있다면 db에 있는 새를 반환
                 bird = random.choice(list(birds_in_range))
                 # 시간은 구간 내에서 랜덤으로
-                logged_time = (current_dt + timedelta(hours=hours_gap*random.random())).time()
+                logged_datetime = (current_dt + timedelta(hours=hours_gap*random.random()))
                 events.append({
                     "type": "bird",
                     "name": bird.name,
-                    "time": logged_time,
+                    "time": logged_datetime.isoformat(),
                     "description": bird.description,
                 })
 
