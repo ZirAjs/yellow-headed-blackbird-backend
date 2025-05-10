@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from django.db.models import Q
 from django.utils.dateparse import parse_datetime
 from rest_framework.permissions import AllowAny
@@ -59,40 +59,24 @@ class NatureEventsView(APIView):
             }
         ]
 
-        current_dt = start_dt
-        while current_dt < end_dt:
-            hours_gap = 2
-            next_dt = current_dt + timedelta(hours=hours_gap)
-
-            # 해당 구간 내 새 필터링
-            current_time = current_dt.time()
-            next_time = next_dt.time()
-
-            if current_time < next_time:
-                # 같은 날 안에서의 시간 구간
-                birds_in_range = Bird.objects.filter(time__gte=current_time, time__lt=next_time)
-            else:
-                # 자정을 넘어가는 경우
-                birds_in_range = Bird.objects.filter(
-                    Q(time__gte=current_time) | Q(time__lt=next_time)
-                )
-            
-            if birds_in_range.exists(): 
-                # db에 있다면 db에 있는 새를 반환
-                bird = random.choice(list(birds_in_range))
-                # 시간은 구간 내에서 랜덤으로
-                random_dt = current_dt + timedelta(hours=hours_gap * random.random())
-                random_dt = random_dt.replace(microsecond=0)
-                
-                events.append({
+        end_hour = end_dt.time().hour
+        active_birds = Bird.objects.filter(time__hour=end_hour)
+        if active_birds.exists():
+            bird = random.choice(list(active_birds))
+            events.append({
                     "type": "bird",
                     "name": bird.name,
-                    "time": timezone.make_aware(random_dt).isoformat(),
+                    "time": end_dt.isoformat(),
                     "description": bird.description,
                 })
-
-            current_dt = next_dt
-
+        else:
+            events.append({
+                    "type": "bird",
+                    "name": "노란머리블랙버드",
+                    "time": end_dt.isoformat(),
+                    "description": "노란머리블랙버드가 여러분을 응원합니다",
+                })
+            
         events.sort(key=lambda x: datetime.fromisoformat(x["time"]))
 
         return Response(events)
