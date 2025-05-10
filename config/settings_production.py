@@ -19,6 +19,8 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", default="django-insecure-!@#@!@#@!@#
 if SECRET_KEY == "django-insecure-!@#@!@#@!@#":
     raise ValueError("Please set the DJANGO_SECRET_KEY environment variable.")
 
+EBIRD_API_KEY = os.getenv("EBIRD_API_KEY")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
