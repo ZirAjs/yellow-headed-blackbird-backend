@@ -108,6 +108,7 @@ class DiaryViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         """
         Create a new diary entry.
+        **주의** ended_time 생성시 diary가 즉시 종료되기에 생성할 때는 비워두어야 합니다.
         """
         user_id = request.user
         serializer = DiarySerializer(data=request.data)
