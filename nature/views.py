@@ -66,7 +66,7 @@ class NatureEventsView(APIView):
                 })
             else: 
                 # db에 없다면 하루마다 반복되는 새 리스트 사용
-                logged_datetime = (current_dt + timedelta(hours=hours_gap*0.5))
+                logged_datetime = (current_dt + timedelta(hours=hours_gap*random.random()))
                 bird_info = get_daily_bird(logged_datetime.time())
                 events.append({
                     "type": "bird",
