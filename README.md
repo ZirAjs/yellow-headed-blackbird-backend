@@ -45,7 +45,9 @@
 * [ReDoc 문서 보기](https://hackerton.zirajs.com/redoc/)
 
 
-## Python 의존성
+## 사용 방법
+
+### Python 의존성
 
 ```txt
 djangorestframework
@@ -55,9 +57,13 @@ dotenv
 gunicorn
 requests
 ```
+### .env 필요사항
+```
+DJANGO_SECRET_KEY
+GEMINI_API_KEY
+```
 
-
-## Build 명령어
+### Build 명령어
 
 ```sh
 # 실행: ./Build.sh
