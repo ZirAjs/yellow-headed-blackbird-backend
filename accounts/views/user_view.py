@@ -12,6 +12,7 @@ class UserViewSet(
 ):
     lookup_field = "id"
     queryset = User.objects.all()
+    serializer_class = UpdateUserSerializer
 
     def get_permissions(self):
         if self.action == "retrieve":
