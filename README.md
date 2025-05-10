@@ -1,6 +1,6 @@
 # SKYST 2025 노란머리 블랙버드 – Backend Repository
 
-![header](https://capsule-render.vercel.app/api?type=wave&color=black&height=300&section=header&text=Night-Task&fontColor=ffffff&fontSize=90)
+![header](https://capsule-render.vercel.app/api?type=wave&color=111111&height=300&section=header&text=Night-Task&fontColor=ffffff&fontSize=90)
 
 ## 프로젝트 소개
 
@@ -10,14 +10,20 @@
 👉 서비스 및 기능에 대한 자세한 내용은 [프론트엔드 리포지토리 README](https://github.com/alexander050211/yellow-headed-blackbird-frontend)를 참고하세요.
 
 ## 기술 스택
+<div align=center>
 <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white">
 <img src="https://img.shields.io/badge/django-092E20?style=for-the-badge&logo=django&logoColor=white"/>
 <img src="https://img.shields.io/badge/django%20rest%20framework-ff1709?style=for-the-badge&logo=django&logoColor=white"/>
+</div>
+<div align=center>
 <img src="https://img.shields.io/badge/sqlite-003B57?style=for-the-badge&logo=sqlite&logoColor=white"/>
 <img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white"/>
 <img src="https://img.shields.io/badge/gunicorn-499848?style=for-the-badge&logo=gunicorn&logoColor=white"/>
-<img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black"/>
 <img src="https://img.shields.io/badge/google%20cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white"/>
+</div>
+<div align=center>
+<img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black"/>
+</div>
 
 ### 백엔드 개발
 
@@ -82,3 +88,4 @@ sunrise-sunset 를 이용해 일출과 일몰 시간을 제공합니다
 
 ## 🌙 끝없는 밤샘의 동반자, 나이테와 함께하세요.
 
+![footer](https://capsule-render.vercel.app/api?type=wave&color=111111&height=300&section=header&text=Night-Task&fontColor=ffffff&fontSize=90)
