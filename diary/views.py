@@ -7,7 +7,7 @@ from django.utils import timezone
 from datetime import datetime, time, timedelta
 
 from .models import Diary
-from .serializers import DiarySerializer
+from .serializers import DiarySerializer, DiaryDetailSerializer
 
 # Internal cache
 _cached_6pm = None
@@ -70,7 +70,7 @@ class DiaryViewSet(ModelViewSet):
         Retrieve a diary entry by its ID.
         """
         instance = self.get_object()
-        serializer = self.get_serializer(instance)
+        serializer = DiaryDetailSerializer(instance)
 
         return Response(serializer.data)
 
@@ -81,13 +81,13 @@ class DiaryViewSet(ModelViewSet):
         [percent] means the user has left the app as top [percent] of the users.
         """
         today_6pm = get_today_6pm()
-        total_diaries = Diary.objects.filter(created_at__gt=today_6pm).count()
+        total_diaries = Diary.objects.filter(created_time__gt=today_6pm).count()
         if total_diaries == 0:
             return Response({"percent": 0.0})
         else:
             finished_diaries = Diary.objects.filter(
-                ended_at__gt=today_6pm,
-                created_at__gt=today_6pm,
+                ended_time__gt=today_6pm,
+                created_time__gt=today_6pm,
             ).count()
             percent = 1 - (float(finished_diaries) / total_diaries)
             return Response({"percent": percent})
