@@ -11,8 +11,8 @@ class CaffeineSerializer(serializers.ModelSerializer):
         model = Caffeine
         fields = [
             "id",
-            "user_id",
-            "caffeine_type",
+            "diary_id",
             "amount",
             "date_time",
+            "description",
         ]
