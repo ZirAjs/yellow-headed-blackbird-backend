@@ -1,6 +1,12 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from accounts.models import User
+from accounts.models import User, Setting
+
+
+class SettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Setting
+        fields = ["alarm"]
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
@@ -55,28 +61,65 @@ class CreateUserSerializer(BaseUserSerializer):
         )
         user.set_password(validated_data["password"])
         user.save()
+        Setting.objects.create(user=user)
         return user
 
     class Meta:
         model = User
-        fields = BaseUserSerializer.Meta.fields + ["nickname"]
+        fields = ["username", "nickname"]
 
 
-class UpdateUserSerializer(BaseUserSerializer):
+class UpdateUserSerializer(serializers.ModelSerializer):
     nickname = serializers.CharField(required=True, min_length=2, max_length=20)
+    setting = SettingSerializer()
 
-    def validate(self, data):
-        # Check if the nickname already exists
-        if User.objects.filter(nickname=data["nickname"]).exists():
+    def validate(self, value):
+        user = self.context["request"].user
+        if User.objects.filter(nickname=value).exclude(pk=user.pk).exists():
             raise serializers.ValidationError("Nickname already exists.")
-
-        return data
+        return value
 
     def update(self, instance, validated_data):
+        setting_data = validated_data.pop("setting", None)
+
         instance.nickname = validated_data.get("nickname", instance.nickname)
         instance.save()
+
+        if setting_data:
+            for attr, value in setting_data.items():
+                setattr(instance.setting, attr, value)
+            instance.setting.save()
+
         return instance
 
     class Meta:
         model = User
-        fields = ["nickname"]
+        fields = ["nickname", "setting"]
+
+
+class ViewUserSerializer(serializers.ModelSerializer):
+    nickname = serializers.CharField(required=True, min_length=2, max_length=20)
+    setting = SettingSerializer()
+
+    def validate(self, value):
+        user = self.instance
+        if User.objects.filter(nickname=value).exclude(pk=user.pk).exists():
+            raise serializers.ValidationError("Nickname already exists.")
+        return value
+
+    def update(self, instance, validated_data):
+        setting_data = validated_data.pop("setting", None)
+
+        instance.nickname = validated_data.get("nickname", instance.nickname)
+        instance.save()
+
+        if setting_data:
+            for attr, value in setting_data.items():
+                setattr(instance.setting, attr, value)
+            instance.setting.save()
+
+        return instance
+
+    class Meta:
+        model = User
+        fields = ["username", "nickname", "setting"]
