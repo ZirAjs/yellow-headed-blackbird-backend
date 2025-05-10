@@ -6,7 +6,7 @@ from accounts.models import User, Setting
 class SettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Setting
-        fields = ["alarm"]
+        fields = ["alarm", "alarm_ui"]
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
