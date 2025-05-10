@@ -29,6 +29,7 @@ class UserViewSet(
         match request.method:
             case "GET":
                 seralizer = CreateUserSerializer(data=request.user)
+                seralizer.is_valid(raise_exception=True)
 
                 return Response(seralizer.data)
 
