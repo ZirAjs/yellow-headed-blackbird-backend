@@ -29,3 +29,10 @@ class Setting(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s settings"
+
+class Cutoff(models.Model):
+    name = models.CharField(max_length=200)
+    cut = models.IntegerField()
+
+    def __str__(self):
+        return self.name
