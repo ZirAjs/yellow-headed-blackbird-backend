@@ -77,6 +77,6 @@ class NatureEventsView(APIView):
             
             current_dt = next_dt
 
-        # events.sort(key=lambda x: datetime.fromisoformat(x["time"]))
+        events.sort(key=lambda x: datetime.fromisoformat(x["time"]))
 
         return Response(events)
