@@ -8,7 +8,6 @@ from django.utils.dateparse import parse_datetime
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from .services.sun_api import fetch_sun_info
-from .services.get_bird import get_daily_bird
 from .models import Bird
 import random
 
