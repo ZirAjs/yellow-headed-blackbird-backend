@@ -4,11 +4,36 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 
-from django.utils import timezone
+
+from django.utils import timezone, dateparse
 from datetime import datetime, time, timedelta
 
 from .models import Diary
 from .serializers import DiarySerializer, DiaryDetailSerializer
+
+##############################
+# Swagger Config             #
+##############################
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
+start_param = openapi.Parameter(
+    "start_datetime",
+    openapi.IN_QUERY,
+    description="Start datetime for filtering diaries ",
+    type=openapi.TYPE_STRING,
+    format="date-time",
+)
+
+end_param = openapi.Parameter(
+    "end_datetime",
+    openapi.IN_QUERY,
+    description="End datetime for filtering diaries ",
+    type=openapi.TYPE_STRING,
+    format="date-time",
+)
+
+################################
 
 # Internal cache
 _cached_6pm = None
@@ -51,8 +76,23 @@ class DiaryViewSet(ModelViewSet):
         for the currently authenticated user.
         """
         user = self.request.user
-        return Diary.objects.filter(user_id=user.id).order_by("-created_time")
+        # Filter diaries by date range if provided
+        start_datetime = self.request.query_params.get("start_datetime")
+        end_datetime = self.request.query_params.get("end_datetime")
 
+        queryset = Diary.objects.filter(user_id=user.id)
+
+        if start_datetime and (
+            start_datetime := dateparse.parse_datetime(start_datetime)
+        ):
+            queryset = queryset.filter(created_time__gte=start_datetime)
+
+        if end_datetime and (end_datetime := dateparse.parse_datetime(end_datetime)):
+
+            queryset = queryset.filter(created_time__lte=end_datetime)
+        return queryset.order_by("-created_time")
+
+    @swagger_auto_schema(manual_parameters=[start_param, end_param])
     def list(self, request, *args, **kwargs):
         """
         List all diary entries for the authenticated user.
@@ -63,7 +103,7 @@ class DiaryViewSet(ModelViewSet):
 
         serializer = DiarySerializer(page, many=True)
         return paginator.get_paginated_response(serializer.data)
-    
+
     def create(self, request, *args, **kwargs):
         """
         Create a new diary entry.

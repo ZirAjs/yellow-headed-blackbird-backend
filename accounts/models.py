@@ -9,3 +9,12 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Setting(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="setting")
+    # theme = models.CharField(max_length=20, default="light")
+    alarm = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s settings"

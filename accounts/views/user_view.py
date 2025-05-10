@@ -1,8 +1,8 @@
 from rest_framework import viewsets, mixins
 from accounts.models import User
 from accounts.serializers import (
-    CreateUserSerializer,
     UpdateUserSerializer,
+    ViewUserSerializer,
 )
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
@@ -15,7 +15,7 @@ class UserViewSet(
 ):
     lookup_field = "id"
     queryset = User.objects.all()
-    serializer_class = UpdateUserSerializer
+    serializer_class = ViewUserSerializer
 
     def get_permissions(self):
         if self.action == "retrieve":
@@ -31,13 +31,15 @@ class UserViewSet(
         """
         match request.method:
             case "GET":
-                serializer = CreateUserSerializer(request.user)
+                serializer = ViewUserSerializer(request.user)
 
                 return Response(serializer.data)
 
             case "PUT":
                 user = request.user
-                serializer_new = UpdateUserSerializer(data=request.data)
+                serializer_new = UpdateUserSerializer(
+                    data=request.data, context={"request": request}
+                )
                 serializer_new.is_valid(raise_exception=True)
 
                 user.nickname = serializer_new.validated_data["nickname"]
