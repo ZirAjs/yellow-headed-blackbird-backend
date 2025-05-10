@@ -12,6 +12,7 @@ from drf_yasg import openapi
 from .services.sun_api import fetch_sun_info
 from .models import Bird
 import random
+from django.utils import timezone
 
 # Create your views here.
 @permission_classes([AllowAny])
@@ -47,13 +48,13 @@ class NatureEventsView(APIView):
             {
                 "type": "sunrise",
                 "name": "sun",
-                "time": sun_data["sunrise"].isoformat(),
+                "time": timezone.make_aware(sun_data["sunrise"]).isoformat(),
                 "description": "해가 뜨는 시간"
             },
             {
                 "type": "sunset",
                 "name": "sun",
-                "time": sun_data["sunset"].isoformat(),
+                "time": timezone.make_aware(sun_data["sunset"]).isoformat(),
                 "description": "해가 지는 시간"
             }
         ]
@@ -80,11 +81,13 @@ class NatureEventsView(APIView):
                 # db에 있다면 db에 있는 새를 반환
                 bird = random.choice(list(birds_in_range))
                 # 시간은 구간 내에서 랜덤으로
-                logged_datetime = (current_dt + timedelta(hours=hours_gap*random.random()))
+                random_dt = current_dt + timedelta(hours=hours_gap * random.random())
+                random_dt = random_dt.replace(microsecond=0)
+                
                 events.append({
                     "type": "bird",
                     "name": bird.name,
-                    "time": logged_datetime.isoformat(),
+                    "time": timezone.make_aware(random_dt).isoformat(),
                     "description": bird.description,
                 })
 
