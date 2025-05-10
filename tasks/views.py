@@ -41,6 +41,14 @@ class TasksViewSet(
         user = self.request.user
         return Task.objects.filter(diary_id__user_id=user.id)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(
+            data=request.data, context={"request": request.user}
+        )
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=201)
+
 
 @permission_classes([AllowAny])
 class GenerateTasksView(APIView):

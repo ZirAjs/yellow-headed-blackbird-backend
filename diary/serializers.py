@@ -7,8 +7,9 @@ from accounts.models import User
 
 class DiarySerializer(serializers.ModelSerializer):
     # For writing: accept list of task IDs
-    tasks = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    tasks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     user_id = serializers.IntegerField(source="user_id.id", read_only=True)
+    due_at = serializers.DateTimeField(allow_null=False, required=True)
 
     # For reading: show actual task data
     task_details = serializers.SerializerMethodField(read_only=True)
@@ -21,7 +22,10 @@ class DiarySerializer(serializers.ModelSerializer):
             "title",
             "description",
             "focus_time",
-            "tasks",  # write-only task IDs
+            "due_at",
+            "created_at",
+            "ended_at",
+            "tasks",  # read-only task IDs
             "task_details",  # read-only serialized task objects
         ]
 
