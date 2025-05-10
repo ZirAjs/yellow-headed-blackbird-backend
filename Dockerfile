@@ -22,8 +22,5 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY . .
 
 
-# Collect static files (can be overridden in compose or entrypoint)
-RUN python manage.py collectstatic --noinput
-
 # Use Gunicorn to run the Django app
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
