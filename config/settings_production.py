@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt",
-    "diary",
     "drf_yasg",
     "accounts",
-    "articles",
+    "nature",
+    "diary",
+    "tasks",
+    "caffeine",
 ]
 
 REST_FRAMEWORK = {

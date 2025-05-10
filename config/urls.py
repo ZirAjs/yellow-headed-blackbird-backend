@@ -32,7 +32,7 @@ urlpatterns = [
         include("diary.urls"),
         name="diaries",
     ),  # diary 앱의 urls.py를 포함
-    path("api/", include("tasks.urls")),  # tasks 앱 urls.py 포함
+    path("api/", include("tasks.urls"), name="tasks"),  # tasks 앱 urls.py 포함
     path(
         "api/",
         include("caffeine.urls"),
