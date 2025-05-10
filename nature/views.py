@@ -7,6 +7,7 @@ from django.utils.dateparse import parse_datetime
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from .services.sun_api import fetch_sun_info
+from .services.get_bird import get_daily_bird
 from .models import Bird
 import random
 
@@ -46,12 +47,16 @@ class NatureEventsView(APIView):
             }
         ]
 
+        current_dt = start_dt
         while current_dt < end_dt:
-            next_dt = current_dt + timedelta(hours=1)
+            hours_gap = 1
+            next_dt = current_dt + timedelta(hours=hours_gap)
 
             # 해당 시간 구간에 포함된 Bird 객체 필터링
-            birds_in_range = Bird.objects.filter(date_time__gte=current_dt, date_time__lt=next_dt)
-            if birds_in_range.exists():
+            birds_in_range = Bird.objects.filter(time__gte=current_dt, time__lt=next_dt)
+            
+            if birds_in_range.exists(): 
+                # db에 있다면 db에 있는 새를 반환
                 bird = random.choice(list(birds_in_range))
                 events.append({
                     "type": "bird",
@@ -59,9 +64,19 @@ class NatureEventsView(APIView):
                     "time": bird.time.isoformat(),
                     "description": bird.description,
                 })
+            else: 
+                # db에 없다면 하루마다 반복되는 새 리스트 사용
+                logged_datetime = (current_dt + timedelta(hours=hours_gap*0.5))
+                bird_info = get_daily_bird(logged_datetime.time())
+                events.append({
+                    "type": "bird",
+                    "name": bird_info["name"],
+                    "time": logged_datetime.isoformat(),
+                    "description": bird_info["description"],
+                })
             
             current_dt = next_dt
 
-        events.sort(key=lambda x: datetime.fromisoformat(x["time"]))
+        # events.sort(key=lambda x: datetime.fromisoformat(x["time"]))
 
         return Response(events)
