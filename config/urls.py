@@ -26,11 +26,13 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("accounts.urls")),  # accounts 앱의 auth_urls.py를 포함
+    path("api/", include("nature.urls")),
     path(
         "api/",
         include("diary.urls"),
         name="diaries",
     ),  # diary 앱의 urls.py를 포함
+    path("api/", include("tasks.urls")),  # tasks 앱 urls.py 포함
     path(
         "api/",
         include("caffeine.urls"),

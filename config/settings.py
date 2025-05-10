@@ -17,6 +17,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles/")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", default="django-insecure-!@#@!@#@!@#")
 
+EBIRD_API_KEY = os.getenv("EBIRD_API_KEY")
+
+GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -36,7 +41,10 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_yasg",
     "accounts",
+    "articles",
+    "nature",
     "diary",
+    "tasks",
     "caffeine",
 ]
 
