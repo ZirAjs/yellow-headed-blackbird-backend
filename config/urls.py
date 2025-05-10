@@ -34,7 +34,7 @@ urlpatterns = [
     path(
         "api/",
         include("diary.urls"),
-        name="diary",
+        name="diaries",
     ),  # diary 앱의 urls.py를 포함
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
