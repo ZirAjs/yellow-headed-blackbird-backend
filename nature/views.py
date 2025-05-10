@@ -46,16 +46,16 @@ class NatureEventsView(APIView):
 
         events = [
             {
-                "type": "sunrise",
-                "name": "sun",
-                "time": timezone.make_aware(sun_data["sunrise"]).isoformat(),
-                "description": "해가 뜨는 시간"
-            },
-            {
                 "type": "sunset",
                 "name": "sun",
                 "time": timezone.make_aware(sun_data["sunset"]).isoformat(),
                 "description": "해가 지는 시간"
+            },
+            {
+                "type": "sunrise",
+                "name": "sun",
+                "time": timezone.make_aware(sun_data["sunrise"]).isoformat(),
+                "description": "해가 뜨는 시간"
             }
         ]
 
@@ -76,7 +76,5 @@ class NatureEventsView(APIView):
                     "time": end_dt.isoformat(),
                     "description": "노란머리블랙버드가 여러분을 응원합니다",
                 })
-            
-        events.sort(key=lambda x: datetime.fromisoformat(x["time"]))
-
+        
         return Response(events)
